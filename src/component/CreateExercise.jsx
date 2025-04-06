@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
 const CreateExercise = () => {
@@ -26,15 +27,17 @@ const CreateExercise = () => {
         console.log(Exercise)
         
         axios.post('http://localhost:5000/exercise/add',Exercise)
-        .then(res => console.log("added successfully"+res.data))
+        .then(res =>{ 
+            console.log("added successfully"+res.data)
+            navigate('/')
+
+        })
         .catch(err => console.log(err))
 
         setUsername('')
         setDescription('')
         setDuration('')
         setDate('')
-
-        window.location="/"
     }
 
     return (
