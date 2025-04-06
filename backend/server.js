@@ -3,10 +3,12 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userroutes from './routes/users.js'
 import exerciseroutes from './routes/exercises.js'
+import cors from 'cors';
 
 const app=express()
 dotenv.config()
 app.use(express.json());
+app.use(cors());
 
 
 const uri = process.env.ATLAS_URI;
@@ -14,6 +16,7 @@ mongoose.connect(uri)
  .then(()=>{
     console.log("connected to database")
  })
+ .catch(err => console.log("database anabel to connect", err))
 
 app.use('/user',userroutes)
 app.use('/exercise',exerciseroutes)
