@@ -29,7 +29,7 @@ const CreateExercise = () => {
         axios.post('http://localhost:5000/exercise/add',Exercise)
         .then(res =>{ 
             console.log("added successfully"+res.data)
-            navigate('/')
+            navigate('/list')
 
         })
         .catch(err => console.log(err))

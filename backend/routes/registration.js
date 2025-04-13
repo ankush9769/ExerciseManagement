@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import Client from '../model/client.model.js';
-import dotenv from 'dotenv';
 import jwt from "jsonwebtoken"
+import dotenv from 'dotenv';
 const router = Router();
 dotenv.config();
 
+
 router.post("/registration", (req, res) => {       //registration
     const { name, email, password } = req.body;
-    const hashpassword = bcrypt.hashSync(password, process.env.JWT_SECRET);
+    const hashpassword = bcrypt.hashSync(password, 10);
     const newclient = new Client({
         name: name,
         email: email,
@@ -23,7 +24,7 @@ router.post("/registration", (req, res) => {       //registration
 
 
 
-router.get("/login", async (req, res) => {        //login
+router.post("/login", async (req, res) => {        //login
     const { email, password } = req.body
     try {
         const user = await Client.findOne({ email })
@@ -39,6 +40,7 @@ router.get("/login", async (req, res) => {        //login
         res.cookie("authtoken", token, {
             httpOnly: true,
             secure: true,
+            // sameSite:None,
             maxAge: 3600000          //1hr
         }).json({ message: "login successfully", token, user: { id: user._id, name: user.name, email: user.email } })
     }
@@ -48,8 +50,24 @@ router.get("/login", async (req, res) => {        //login
     }
 });
 
-router.post("/logout", (req, res) => {              //logout
-    res.clearCookie("authToken").json({ message: "Logged out successfully" });
+router.post("/logout", (req, res) => {
+    res.clearCookie("authtoken", {
+      httpOnly: true,
+      secure: true,       // set to false if you're on localhost without HTTPS
+      sameSite: "None",   // or "Lax" if you're not using cross-site cookies
+    }).json({ message: "Logged out successfully" });
+  });
+
+router.get("/verify", (req, res) => {              //verification
+    const token = req.cookies.authtoken
+    if (!token) return res.status(401).json({ message: "Please login to access this resource" })
+    try {
+        const decode = jwt.verify(token, process.env.JWT_SECRET)
+        res.json({isAuthendicated:true , user : decode})
+    }
+    catch(err){
+        res.status(401).json({ message: "invalid token" })
+    }
 });
 
 

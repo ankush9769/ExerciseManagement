@@ -46,7 +46,7 @@ const EditExercise = () => {
       .then(res =>{ 
         console.log("added successfully" + res.data)
         alert('Exercise updated successfully!');
-        navigate('/')
+        navigate('/list')
       })
       .catch(err => console.log(err))
 
