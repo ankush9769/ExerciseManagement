@@ -3,9 +3,10 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
+  const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const navigate = useNavigate()
+  
 
   const onchangeEmail = (e) => {
     setEmail(e.target.value)
@@ -25,7 +26,7 @@ const Login = () => {
       .then((res) => {
         console.log(res)
         alert("login Successfull")
-        navigate('/list');
+        navigate('/dashboard');
       })
       .catch((err) => { console.log(err) });
   }

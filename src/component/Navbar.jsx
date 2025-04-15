@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate ,useLocation} from 'react-router-dom';
 
-
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();

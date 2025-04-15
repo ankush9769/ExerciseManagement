@@ -8,6 +8,8 @@ import CreateUser from "./component/CreateUser";
 import ExerciseList from "./component/ExerciseList";
 import Login from "./component/Login";
 import Registration from "./component/Registration";
+import ClientDashboard from "./component/ClientDashboard";
+import Protectedroute from "./component/Protectedroute";
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Registration/>} />
           <Route path="/login" element={<Login/>} />
+          <Route path="/dashboard" element={<Protectedroute><ClientDashboard/></Protectedroute>}/>
           <Route path="/list" element={<ExerciseList />} />
           <Route path="/edit/:id" element={<EditExercise />} />
           <Route path="/create" element={<CreateExercise />} />

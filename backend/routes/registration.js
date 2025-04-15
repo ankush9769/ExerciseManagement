@@ -39,8 +39,8 @@ router.post("/login", async (req, res) => {        //login
         console.log("login successfully")
         res.cookie("authtoken", token, {
             httpOnly: true,
-            secure: true,
-            // sameSite:None,
+            secure: false,
+            sameSite:"Lax",
             maxAge: 3600000          //1hr
         }).json({ message: "login successfully", token, user: { id: user._id, name: user.name, email: user.email } })
     }
@@ -50,20 +50,22 @@ router.post("/login", async (req, res) => {        //login
     }
 });
 
-router.post("/logout", (req, res) => {
-    res.clearCookie("authtoken", {
+router.post("/logout",async (req, res) => {
+    await res.clearCookie("authtoken", {
       httpOnly: true,
       secure: true,       // set to false if you're on localhost without HTTPS
       sameSite: "None",   // or "Lax" if you're not using cross-site cookies
     }).json({ message: "Logged out successfully" });
+    console.log("logout successfully")
   });
 
-router.get("/verify", (req, res) => {              //verification
-    const token = req.cookies.authtoken
+router.get("/verify",async (req, res) => {              //login verification
+    const token =await req.cookies.authtoken
     if (!token) return res.status(401).json({ message: "Please login to access this resource" })
     try {
         const decode = jwt.verify(token, process.env.JWT_SECRET)
-        res.json({isAuthendicated:true , user : decode})
+        const user =await Client.findById(decode.id).select("-password");
+        res.json({isAuthendicated:true ,user})
     }
     catch(err){
         res.status(401).json({ message: "invalid token" })
